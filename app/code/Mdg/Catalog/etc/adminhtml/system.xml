@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <tab id="mdg" translate="label" sortOrder="10">
+            <label>Mdg Extensions</label>
+        </tab>
+        <section id="mdg" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Settings</label>
+            <tab>mdg</tab>
+            <resource>Mdg_Catalog::config</resource>
+            <group id="general" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>General Configuration</label>
+                <field id="module_enable" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable Module</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Select Yes to enable mdg catalog</comment>
+                </field>
+            </group>
+            <group id="product" type="text" sortOrder="30" translate="label " showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Product</label>
+                <field id="tax" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Add to price</label>
+                    <validate>integer validate-not-negative-number</validate>
+                    <comment>Enter number to add to product price</comment>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>
