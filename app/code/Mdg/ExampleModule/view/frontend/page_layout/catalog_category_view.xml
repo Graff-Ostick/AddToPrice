@@ -7,4 +7,8 @@
 -->
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="3columns"
       xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <move element="category.description" destination="sidebar.additional" after="category.image"/>
+        <move element="category.image" destination="sidebar.additional" before="-"/>
+    </body>
 </page>
