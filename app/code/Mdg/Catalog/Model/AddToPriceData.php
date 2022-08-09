@@ -16,6 +16,9 @@ class AddToPriceData
      */
     const XML_PATH_CONFIG = 'mdg';
 
+    /**
+     * @var ScopeConfigInterface
+     */
     protected ScopeConfigInterface $scopeConfig;
 
     /**
