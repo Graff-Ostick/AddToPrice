@@ -1,0 +1,10 @@
+<?php
+/** @var View $block */
+
+use Magento\Catalog\Block\Product\View;
+
+$product = $block->getProduct();
+?>
+<?php echo $product->getData('attr_type_text'); ?><br>
+<?php echo $product->getData('attr_type_select'); ?><br>
+<?php echo $product->getData('attr_type_multi'); ?><br>
