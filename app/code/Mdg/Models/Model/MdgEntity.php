@@ -6,6 +6,7 @@ namespace Mdg\Models\Model;
 use Magento\Framework\DataObject\IdentityInterface;
 use Magento\Framework\Model\AbstractModel;
 use Mdg\Models\Model\Api\Data\MdgEntityInterface;
+use Mdg\Models\Model\ResourceModel\MdgEntity as ResourceModel;
 
 class MdgEntity extends AbstractModel implements IdentityInterface, MdgEntityInterface
 {
@@ -13,7 +14,7 @@ class MdgEntity extends AbstractModel implements IdentityInterface, MdgEntityInt
 
     protected function _construct()
     {
-        $this->_init('Mdg\Models\Model\ResourceModel\MdgEntity');
+        $this->_init(ResourceModel::class);
     }
 
     public function getIdentities()
@@ -22,10 +23,15 @@ class MdgEntity extends AbstractModel implements IdentityInterface, MdgEntityInt
     }
 
     /**
-     * @return int
+     * @return string
      */
-    public function getMdgEntityId():int
+    public function getMdgEntityId():string
     {
+        try {
+             $this->getData(self::ENTITY_ID);
+        } catch (\Magento\Framework\Exception\LocalizedException $e) {
+            return 'Mdg entity Id not found ' . $e;
+        }
         return $this->getData(self::ENTITY_ID);
     }
 
@@ -70,5 +76,22 @@ class MdgEntity extends AbstractModel implements IdentityInterface, MdgEntityInt
     public function setCreatedAt(string $createdAt):MdgEntityInterface
     {
         return $this->setData(self::CREATED_AT, $createdAt);
+    }
+
+    /**
+     * @return \Mdg\Models\Model\Api\Data\MdgEntityExtensionInterface|null
+     */
+    public function getExtensionAttributes()
+    {
+        return $this->_getExtensionAttributes();
+    }
+
+    /**
+     * @param \Mdg\Models\Model\Api\Data\MdgEntityExtensionInterface $extensionAttributes
+     * @return $this
+     */
+    public function setExtensionAttributes(\Mdg\Models\Model\Api\Data\MdgEntityExtensionInterface $extensionAttributes)
+    {
+        return $this->_setExtensionAttributes($extensionAttributes);
     }
 }

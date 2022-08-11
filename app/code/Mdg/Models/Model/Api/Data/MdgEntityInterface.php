@@ -13,9 +13,9 @@ interface MdgEntityInterface
     const CREATED_AT = 'created_at';
 
     /**
-     * @return int
+     * @return string
      */
-    public function getMdgEntityId():int;
+    public function getMdgEntityId():string;
 
     /**
      * @param int $mdgEntityId
@@ -44,4 +44,17 @@ interface MdgEntityInterface
      * @return MdgEntityInterface
      */
     public function setCreatedAt(string $createdAt):MdgEntityInterface;
+
+    /**
+     * Retrieve existing extension attributes object or create a new one.
+     * @return \Mdg\Models\Model\Api\Data\MdgEntityExtensionInterface|null
+     */
+    public function getExtensionAttributes();
+
+    /**
+     * Set an extension attributes object.
+     * @param \Mdg\Models\Model\Api\Data\MdgEntityExtensionInterface $extensionAttributes
+     * @return mixed
+     */
+    public function setExtensionAttributes(\Mdg\Models\Model\Api\Data\MdgEntityExtensionInterface $extensionAttributes);
 }
