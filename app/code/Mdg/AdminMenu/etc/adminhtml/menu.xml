@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add id="Mdg_AdminMenu::label"
+             title="Custom Entity"
+             module="Mdg_AdminMenu"
+             resource="Mdg_AdminMenu::label"
+             parent="Magento_Backend::stores"
+             sortOrder="1000"/>
+        <add id="Mdg_AdminMenu::home"
+             title="Custom Entity Management"
+             module="Mdg_AdminMenu"
+             parent="Mdg_AdminMenu::label"
+             resource="Mdg_AdminMenu::home"
+             action="mdg/customentity/index"/>
+    </menu>
+</config>
