@@ -1,7 +1,7 @@
 {
     "mdg_entity": {
         "column": {
-            "entity_id": true,
+            "mdg_entity_id": true,
             "name": true,
             "created_at": true
         },

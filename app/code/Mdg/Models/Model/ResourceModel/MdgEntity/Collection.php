@@ -9,12 +9,23 @@ use Mdg\Models\Model\ResourceModel\MdgEntity as ResourceModel;
 
 class Collection extends AbstractCollection
 {
-    protected $_idFieldName = 'entity_id';
+    /**
+     * @var string
+     */
+    protected $_idFieldName = 'mdg_entity_id';
+
+    /**
+     * @var string
+     */
     protected $_eventPrefix = 'mdg_entity_collection';
+
+    /**
+     * @var string
+     */
     protected $_eventObject = 'mdg_entity_collection';
 
     /**
-     * @return void
+     * Define resource model.
      */
     protected function _construct()
     {
