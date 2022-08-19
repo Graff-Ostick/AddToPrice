@@ -20,6 +20,11 @@ class MdgEntity extends AbstractDb
     protected $_date;
 
     /**
+     * @var bool
+     */
+    protected $_isPkAutoIncrement = false;
+
+    /**
      * Construct.
      *
      * @param Context        $context

@@ -14,9 +14,9 @@ interface MdgEntityInterface
 
     /**
      * Get mdg_entity_id
-     * @return string
+     * @return int
      */
-    public function getMdgEntityId():string;
+    public function getMdgEntityId();
 
     /**
      * Set mdg_entity_id

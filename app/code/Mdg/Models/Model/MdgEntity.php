@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Mdg\Models\Model;
 
 use Magento\Framework\DataObject\IdentityInterface;
+use Magento\Framework\Exception\CouldNotSaveException;
 use Magento\Framework\Model\AbstractModel;
 use Mdg\Models\Api\Data\MdgEntityInterface;
 use Mdg\Models\Model\ResourceModel\MdgEntity as ResourceModel;
@@ -25,15 +26,10 @@ class MdgEntity extends AbstractModel implements MdgEntityInterface
 
     /**
      * Get mdg_entity_id
-     * @return string
+     * @return int
      */
-    public function getMdgEntityId():string
+    public function getMdgEntityId()
     {
-        try {
-             $this->getData(self::MDG_ENTITY_ID);
-        } catch (\Magento\Framework\Exception\LocalizedException $e) {
-            return 'Mdg entity Id not found ' . $e;
-        }
         return $this->getData(self::MDG_ENTITY_ID);
     }
 
