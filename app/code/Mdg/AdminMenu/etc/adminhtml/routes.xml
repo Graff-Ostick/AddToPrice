@@ -2,7 +2,7 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:framework:App/etc/routes.xsd">
   <router id="admin">
-      <route id="mdg_admin_menu" frontName="mdg">
+      <route id="mdg_admin_menu" frontName="mdg_admin_menu">
           <module name="Mdg_AdminMenu"/>
       </route>
   </router>

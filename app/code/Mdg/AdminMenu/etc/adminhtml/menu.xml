@@ -13,6 +13,6 @@
              module="Mdg_AdminMenu"
              parent="Mdg_AdminMenu::label"
              resource="Mdg_AdminMenu::home"
-             action="mdg/customentity/index"/>
+             action="mdg_admin_menu/customentity"/>
     </menu>
 </config>

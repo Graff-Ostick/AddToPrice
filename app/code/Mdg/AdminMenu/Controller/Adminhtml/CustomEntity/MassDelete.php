@@ -3,78 +3,72 @@ declare(strict_types=1);
 
 namespace Mdg\AdminMenu\Controller\Adminhtml\CustomEntity;
 
+use Magento\Backend\App\Action;
+use Magento\Backend\Model\View\Result\Redirect;
+use Magento\Framework\App\Action\HttpPostActionInterface;
+use Magento\Framework\Controller\ResultFactory;
 use Magento\Backend\App\Action\Context;
-use Magento\Framework\App\ResponseInterface;
-use Magento\Framework\Controller\ResultInterface;
-use Magento\Framework\Registry;
-use Magento\Framework\View\Result\PageFactory;
-use Mdg\AdminMenu\Controller\Adminhtml\CustomEntity;
-use Mdg\Models\Model\MdgEntityFactory;
-use Mdg\Models\Model\ResourceModel\MdgEntityFactory as resMdgEntityFactory;
-use Mdg\AdminMenu\Logger\Logger;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Ui\Component\MassAction\Filter;
+use Mdg\Models\Model\ResourceModel\MdgEntity\CollectionFactory;
 
 /**
- * @property Logger $_logger
- * @property resMdgEntityFactory $_resMdgEntityFactory
+ * Class MassDelete
  */
-class MassDelete extends CustomEntity
+class MassDelete extends Action implements HttpPostActionInterface
 {
     /**
-     * @var resMdgEntityFactory
+     * Authorization level of a basic admin session
+     *
+     * @see _isAllowed()
      */
-    protected $_resultPageFactory;
+    const ADMIN_RESOURCE = 'Magento_Cms::page_delete';
 
     /**
-     * @param Context $context
-     * @param Registry $coreRegistry
-     * @param PageFactory $resultPageFactory
-     * @param MdgEntityFactory $mdgEntityFactory
-     * @param resMdgEntityFactory $resMdgEntityFactory
-     * @param Logger $logger
+     * @var Filter
+     */
+    protected $filter;
+
+    /**
+     * @var CollectionFactory
+     */
+    protected $collectionFactory;
+
+    /**
+     * @param Context           $context
+     * @param Filter            $filter
+     * @param CollectionFactory $collectionFactory
      */
     public function __construct(
-        Context $context,
-        Registry $coreRegistry,
-        PageFactory $resultPageFactory,
-        MdgEntityFactory $mdgEntityFactory,
-        resMdgEntityFactory $resMdgEntityFactory,
-        Logger $logger
+        Context             $context,
+        Filter              $filter,
+        CollectionFactory    $collectionFactory
     ) {
-        parent::__construct($context, $coreRegistry, $resultPageFactory, $mdgEntityFactory, $logger);
-        $this->_resMdgEntityFactory = $resMdgEntityFactory;
+        $this->filter = $filter;
+        $this->collectionFactory = $collectionFactory;
+        parent::__construct($context);
     }
 
     /**
-     * @return ResponseInterface|ResultInterface|void
+     * Execute action
+     *
+     * @return Redirect
+     * @throws LocalizedException|\Exception
      */
     public function execute()
     {
-        $mdgEntityIds = $this->getRequest()->getParams()['mdg_entity_id'];
-        $model = $this->_mdgEntityFactory->create();
-        $resModel = $this->_resMdgEntityFactory->create();
-        if (count($mdgEntityIds)) {
-            $i = 0;
-            foreach ($mdgEntityIds as $mdgEntityId) {
-                try {
-                    $resModel->load($model, $mdgEntityId, 'mdg_entity_id');
-                    $resModel->delete($model);
-                    $i++;
-                } catch (\Exception $e) {
-                    $this->_logger->addError("Something went wrong with model,
-                     when try to load or delete - " . $e);
-                    $this->messageManager->addErrorMessage($e->getMessage());
-                }
-            }
-            if ($i > 0) {
-                $this->messageManager->addSuccessMessage(
-                    __('A total of %1 item(s) were deleted.', $i)
-                );
-            }
-        } else {
-            $this->messageManager->addErrorMessage(
-                __('You can not delete item(s), Please check again %1')
-            );
+        $collection = $this->filter->getCollection($this->collectionFactory->create());
+        $collectionSize = $collection->getSize();
+
+        foreach ($collection as $page) {
+            $page->delete();
         }
-        $this->_redirect('*/*/index');
+
+        $this->messageManager->addSuccessMessage(__('A total of %1 record(s) have been deleted.', $collectionSize));
+
+        /** @var Redirect $resultRedirect */
+        $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
+
+        return $resultRedirect->setPath('*/*/');
     }
 }

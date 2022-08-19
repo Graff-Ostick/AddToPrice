@@ -1,15 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      layout="admin-2columns-left"
+      layout="admin-1column"
       xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <update handle="editor"/>
     <body>
-        <referenceContainer name="left">
-            <block class="Mdg\AdminMenu\Block\Adminhtml\CustomEntity\Edit\Tabs"
-                   name="mdg_admin_menu_customentity_grid_block.edit.tabs"/>
-        </referenceContainer>
         <referenceContainer name="content">
-            <block class="Mdg\AdminMenu\Block\Adminhtml\CustomEntity\Edit"
-                   name="mdg_admin_menu_customentity_grid_block.edit"/>
+           <uiComponent name="mdg_admin_menu_customentity_grid_form"/>
         </referenceContainer>
     </body>
 </page>

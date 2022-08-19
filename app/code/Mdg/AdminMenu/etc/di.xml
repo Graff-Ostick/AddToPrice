@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
-<type name="Mdg\AdminMenu\Logger\Handler">
-    <arguments>
-        <argument name="filesystem" xsi:type="object">Magento\Framework\Filesystem\Driver\File</argument>
-    </arguments>
-</type>
+    <type name="Mdg\AdminMenu\Logger\Handler">
+        <arguments>
+            <argument name="filesystem" xsi:type="object">Magento\Framework\Filesystem\Driver\File</argument>
+        </arguments>
+    </type>
     <type name="Mdg\AdminMenu\Logger\Logger">
         <arguments>
             <argument name="name" xsi:type="string">mdg_adminmenu_log</argument>
@@ -14,4 +14,20 @@
             </argument>
         </arguments>
     </type>
+<!--    <preference for="Mdg\Models\Api\Data\MdgEntityInterface" type="Mdg\Models\Model\MdgEntity" />-->
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="mdg_admin_menu_customentity_grid_list_data_source" xsi:type="string">Mdg\Models\Model\ResourceModel\MdgEntity\MdgEntity\Collection</item>
+            </argument>
+        </arguments>
+    </type>
+    <virtualType
+        name="Mdg\Models\Model\ResourceModel\MdgEntity\MdgEntity\Collection"
+        type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">mdg_entity</argument>
+            <argument name="resourceModel" xsi:type="string">Mdg\Models\Model\ResourceModel\MdgEntity</argument>
+        </arguments>
+    </virtualType>
 </config>

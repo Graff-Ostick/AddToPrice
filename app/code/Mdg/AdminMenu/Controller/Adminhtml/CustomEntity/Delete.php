@@ -3,38 +3,89 @@ declare(strict_types=1);
 
 namespace Mdg\AdminMenu\Controller\Adminhtml\CustomEntity;
 
-use Magento\Framework\View\Result\Page;
-use Mdg\AdminMenu\Controller\Adminhtml\CustomEntity;
+use Magento\Backend\App\Action;
+use Magento\Backend\App\Action\Context;
+use Magento\Backend\Model\View\Result\Redirect;
+use Magento\Framework\App\Action\HttpPostActionInterface;
+use Mdg\Models\Model\MdgEntityFactory;
 
-class Delete extends CustomEntity
+/**
+ * Delete CMS page action.
+ */
+class Delete extends Action implements HttpPostActionInterface
 {
     /**
-     * Delete entity | write error message
-     * @return void
+     * Authorization level of a basic admin session
+     *
+     * @see _isAllowed()
+     */
+    const ADMIN_RESOURCE = 'Mdg_AdminMenu::entity_delete';
+
+    /**
+     * @var MdgEntityFactory
+     */
+    private MdgEntityFactory $mdgEntityFactory;
+
+    /**
+     * @param Context           $context
+     * @param MdgEntityFactory  $mdgEntityFactory
+     */
+    public function __construct(
+        Context             $context,
+        MdgEntityFactory    $mdgEntityFactory
+    ) {
+        parent::__construct($context);
+        $this->mdgEntityFactory = $mdgEntityFactory;
+    }
+
+    /**
+     * Delete action
+     *
+     * @return Redirect
      */
     public function execute()
     {
-        $mdgEntityId = (int) $this->getRequest()->getParam('mdg_entity_id');
+        $id = $this->getRequest()->getParam('mdg_entity_id');
+        /** @var Redirect $resultRedirect */
+        $resultRedirect = $this->resultRedirectFactory->create();
 
-        if ($mdgEntityId) {
-            $mdgEntityModel = $this->_mdgEntityFactory->create();
-            $mdgEntityModel->load($mdgEntityId);
+        if ($id) {
+            $title = "";
+            try {
+                // init model and delete
+//                $model = $this->_objectManager->create(\Magento\Cms\Model\Page::class);
+                $model = $this->mdgEntityFactory->create();
+                $model->load($id);
 
-            if (!$mdgEntityModel->getMdgEntityId()) {
-                $this->messageManager->addError(__('This entity no longer exists.'));
-                $this->_logger->addNotice("Somethings went wrong when try get id by mdg_entity table");
-            } else {
-                try {
-                    $mdgEntityModel->delete();
-                    $this->messageManager->addSuccess(__(' The entity has been deleted.'));
-                    $this->_redirect('*/*/');
-                    return;
-                } catch (\Exception $e) {
-                    $this->messageManager->addError($e->getMessage());
-                    $this->_logger->addError('Cannot delete entity' . $e);
-                    $this->_redirect('*/*/edit', ['mdg_entity_id' => $mdgEntityModel->getMdgEntityId()]);
-                }
+                $name = $model->getName();
+                $model->delete();
+
+                // display success message
+                $this->messageManager->addSuccessMessage(__('The page has been deleted.'));
+
+                // go to grid
+                $this->_eventManager->dispatch('mdg_admin_menu_on_delete', [
+                    'title' => $name,
+                    'status' => 'success'
+                ]);
+
+                return $resultRedirect->setPath('*/*/');
+            } catch (\Exception $e) {
+                $this->_eventManager->dispatch(
+                    'mdg_admin_menu_on_delete',
+                    ['title' => $title, 'status' => 'fail']
+                );
+                // display error message
+                $this->messageManager->addErrorMessage($e->getMessage());
+                // go back to edit form
+                return $resultRedirect->setPath('*/*/edit', ['page_id' => $id]);
             }
         }
+
+        // display error message
+        $this->messageManager->addErrorMessage(__('We can\'t find a entity to delete.'));
+
+        // go to grid
+        return $resultRedirect->setPath('*/*/');
     }
 }
